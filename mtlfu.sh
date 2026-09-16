@@ -1,1 +1,1 @@
-apps/mtlfu
+sh_apps/mtlfu

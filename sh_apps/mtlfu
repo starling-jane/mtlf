@@ -23,6 +23,7 @@ do
 		echo "Loading conf from $location"
 		. "$location"
 		counf_found=1
+		config_path="$location"
 	else
 		echo "No conf at $location"
 	fi
@@ -30,9 +31,8 @@ done
 
 python_version="$(python3 --version)"
 
-install_from_repo()
+create_config()
 {
-	. "./mtlf.conf"
 	file -E "apps" 1>/dev/null 2>/dev/null
 	if [ "$?" == "0" ]
 	then
@@ -42,56 +42,100 @@ install_from_repo()
 	fi
 	config_install_path="/usr/local/etc/mtlf.conf"
 	python_install_path="/usr/local/lib/python3.15"
-	echo -n "directory to install executables [/usr/local/bin]:"
-	read bin_dir_
-	if [ "$bin_dir_" != "" ]
-	then
-		bin_dir="$bin_dir_"
-	fi
-	echo -n "directory to install man pages [/usr/local/share/man]:"
-	read man_dir_
-	if [ "$man_dir_" != "" ]
-	then
-		man_dir="$man_dir_"
-	fi
-	echo -n "directory to install config [/usr/local/etc/mtlf.conf]:"
+	echo -n "directory to install config [/usr/local/etc/mtlf.conf]: "
 	read config_install_path_
 	if [ "$config_install_path_" != "" ]
 	then
 		config_install_path="$config_install_path_"
 	fi
-	echo -n "directory to install python lib [/usr/local/lib/python3.15]:"
+	echo -n "" > "$config_install_path"
+	echo -n "directory to install executables [/usr/local/bin]: "
+	read bin_dir_
+	if [ "$bin_dir_" != "" ]
+	then
+		bin_dir="$bin_dir_"
+	fi
+	echo "bin_dir=\"$bin_dir\"" >> "$config_install_path"
+	echo -n "directory to install man pages [/usr/local/share/man]: "
+	read man_dir_
+	if [ "$man_dir_" != "" ]
+	then
+		man_dir="$man_dir_"
+	fi
+	echo "man_dir=\"$man_dir\"" >> "$config_install_path"
+	echo -n "directory to install python lib [/usr/local/lib/python3.15]: "
 	read python_install_path_
 	if [ "$python_install_path_" != "" ]
 	then
 		python_install_path="$python_install_path_"
 	fi
+	echo "python_install_path=\"$python_install_path\"" >> "$config_install_path"
+	python_bin="$(which python)"
+	echo -n "python binary [$python_bin]: "
+	read python_bin_
+	if [ "$python_bin_" != "" ]
+	then
+		python_bin="$python_bin_"
+	fi
+	echo "python_bin=\"$python_bin\"" >> "$config_install_path"
+}
+
+install_from_repo()
+{
+	create_config
+	. "$config_install_path"
+	echo "configuration:"
+	cat "$config_install_path"
 	echo -n "install everything? [y/n] "
 	read confirm_install
 	if [ "$confirm_install" == "y" ]
 	then
-		cp "src/mtlf.py" "$python_install_path/"
-		if [ "$?" == "0" ]
-		then
-			echo "mtlf.py installed."
-		fi
-		cp apps/* "$bin_dir"
-		if [ "$?" == "0" ]
-		then
-			echo "executables installed."
-		fi
-		cp docs/* "$man_dir"
-		if [ "$?" == "0" ]
-		then
-			echo "man pages installed."
-		fi
-		cp "mtlf.conf" "$config_install_path"
-		if [ "$?" == "0" ]
-		then
-			echo "config installed."
-		fi
-		echo "installation finished."
+		copy_files_from_repo
 	fi
+}
+
+update_from_repo()
+{
+	echo "configuration:"
+	cat "$config_path"
+	copy_files_from_repo
+}
+
+copy_files_from_repo()
+{
+	cp "src/mtlf.py" "$python_install_path/"
+	if [ "$?" == "0" ]
+	then
+		echo "mtlf.py installed."
+	fi
+	cd py_apps
+	for app in *
+	do
+		echo "installing $app ..."
+		echo "#!$python_bin" > "$bin_dir/$app"
+		cat "$app" >> "$bin_dir/$app"
+		if [ "$?" == "0" ]
+		then
+			echo "$app installed."
+		fi
+	done
+	cd ..
+	cp sh_apps/* "$bin_dir"
+	if [ "$?" == "0" ]
+	then
+		echo "shell scripts installed."
+	fi
+	#cp apps/* "$bin_dir"
+	#if [ "$?" == "0" ]
+	#then
+	#	echo "executables installed."
+	#fi
+	cp docs/* "$man_dir"
+	if [ "$?" == "0" ]
+	then
+		echo "man pages installed."
+	fi
+	echo "installation finished."
 }
 
 clone_from_git()
@@ -118,12 +162,17 @@ then
 	then
 		mtlf_py_found=1
 		echo "mtlf.py was found."
+		. "./mtlf.conf"
 		install_from_repo
 	else
 		echo "no mtlf.py found."
 		echo "cloning into git repo now..."
 		clone_from_git
+		. "./mtlf.conf"
 		install_from_repo
 		clean_temp_files
 	fi
+elif [ "$command" == "update" ]
+then
+	update_from_repo
 fi

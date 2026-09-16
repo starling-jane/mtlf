@@ -20,20 +20,20 @@ have fun and be yourself
 
 ## road map
 ### v0.2
-- automate downloading of scryfall bulk data
-- properly detect or query for system python version + fix the shebang lines at install time
-- implement an update function in the installer, distinct from the install function
+[ ] automate downloading of scryfall bulk data
+[x] properly detect or query for system python version + fix the shebang lines at install time
+[x] implement an update function in the installer, distinct from the install function
 ### v0.3
-- implement an optional database server daemon (postgres server?) to improve query times
-	- (maybe this needs to happen later than the v1.0 stuff)
+[ ] implement an optional database server daemon (postgres server?) to improve query times
+	[ ] (maybe this needs to happen later than the v1.0 stuff)
 ### v1.0 (?)
-- make the python library installable in a clean way with pip or something, instead of 'copy it into /usr/lib/python'
-- make the installation process cleaner in general and more portable
-- generally make things portable enough that this should be reasonably installable on any unix system
-- test everything more on multiple installations until i'm confident in it
+[ ] make the python library installable in a clean way with pip or something, instead of 'copy it into /usr/lib/python'
+[ ] make the installation process cleaner in general and more portable
+[ ] generally make things portable enough that this should be reasonably installable on any unix system
+[ ] test everything more on multiple installations until i'm confident in it
 ### v???
-- maybe some sort of PHP webserver frontend stuff?
-- possibly at least an HTTP API to interact with it
-- directly query Scryfall
-	- not doing this unless i can at least parse and respect rate limits
-	- mostly i want to be careful to not have this application be a nuclear bomb that explodes scryfall's rate limits and instantly gets you IP banned, which is part of why it currently does not support directly querying Scryfall at all
+[ ] maybe some sort of PHP webserver frontend stuff?
+[ ] possibly at least an HTTP API to interact with it
+[ ] directly query Scryfall
+	[ ] not doing this unless i can at least parse and respect rate limits
+	[ ] mostly i want to be careful to not have this application be a nuclear bomb that explodes scryfall's rate limits and instantly gets you IP banned, which is part of why it currently does not support directly querying Scryfall at all
