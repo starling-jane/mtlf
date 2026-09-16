@@ -1,0 +1,129 @@
+#!/usr/bin/env sh
+
+echo "WARNING: INSTALL SCRIPT IS VERY WIP"
+echo "VERY RUDIMENTARY AND VERY EXPERIMENTAL"
+echo "NOT FOR PRODUCTION USE AND NO WARRANTY PROVIDED!"
+echo "PLEASE REVIEW THE SCRIPT YOURSELF BEFORE USE"
+
+conf_found=0
+apps_folder_found=0
+mtlf_py_found=0
+
+git_src=''
+
+command=$1
+
+IFS=:
+paths=/etc/mtlf.conf:/usr/local/etc/mtlf.conf
+for location in $paths
+do
+	file -E "$location" 1>/dev/null 2>/dev/null
+	if [ "$?" == "0" ]
+	then
+		echo "Loading conf from $location"
+		. "$location"
+		counf_found=1
+	else
+		echo "No conf at $location"
+	fi
+done
+
+python_version="$(python3 --version)"
+
+install_from_repo()
+{
+	. "./mtlf.conf"
+	file -E "apps" 1>/dev/null 2>/dev/null
+	if [ "$?" == "0" ]
+	then
+		apps_folder_found=1
+		echo "The following apps were found:"
+		ls apps
+	fi
+	config_install_path="/usr/local/etc/mtlf.conf"
+	python_install_path="/usr/local/lib/python3.15"
+	echo -n "directory to install executables [/usr/local/bin]:"
+	read bin_dir_
+	if [ "$bin_dir_" != "" ]
+	then
+		bin_dir="$bin_dir_"
+	fi
+	echo -n "directory to install man pages [/usr/local/share/man]:"
+	read man_dir_
+	if [ "$man_dir_" != "" ]
+	then
+		man_dir="$man_dir_"
+	fi
+	echo -n "directory to install config [/usr/local/etc/mtlf.conf]:"
+	read config_install_path_
+	if [ "$config_install_path_" != "" ]
+	then
+		config_install_path="$config_install_path_"
+	fi
+	echo -n "directory to install python lib [/usr/local/lib/python3.15]:"
+	read python_install_path_
+	if [ "$python_install_path_" != "" ]
+	then
+		python_install_path="$python_install_path_"
+	fi
+	echo -n "install everything? [y/n] "
+	read confirm_install
+	if [ "$confirm_install" == "y" ]
+	then
+		cp "src/mtlf.py" "$python_install_path/"
+		if [ "$?" == "0" ]
+		then
+			echo "mtlf.py installed."
+		fi
+		cp apps/* "$bin_dir"
+		if [ "$?" == "0" ]
+		then
+			echo "executables installed."
+		fi
+		cp docs/* "$man_dir"
+		if [ "$?" == "0" ]
+		then
+			echo "man pages installed."
+		fi
+		cp "mtlf.conf" "$config_install_path"
+		if [ "$?" == "0" ]
+		then
+			echo "config installed."
+		fi
+		echo "installation finished."
+	fi
+}
+
+clone_from_git()
+{
+	tmp_folder = "$(mktemp -d)"
+	cd "$tmp_folder"
+	git clone "$git_src"
+	cd "mtlf"
+}
+clean_temp_files()
+{
+	echo "cleaning up temp files..."
+	rmdir "$tmp_folder"
+	if [ "$?" == "0" ]
+	then
+		echo "done."
+	fi
+}
+
+if [ "$command" == "install" ]
+then
+	file -E "src/mtlf.py" 1>/dev/null 2>/dev/null
+	if [ "$?" == "0" ]
+	then
+		mtlf_py_found=1
+		echo "mtlf.py was found."
+		install_from_repo
+	else
+		echo "no mtlf.py found."
+		echo "cloning into git repo now..."
+		clone_from_git
+		install_from_repo
+		clean_temp_files
+	fi
+fi

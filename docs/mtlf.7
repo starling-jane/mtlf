@@ -1,0 +1,27 @@
+.Dd January 24, 2025
+.Dt MTLF 7
+.Os
+.Sh NAME
+.Nm mtlf
+.Nd python library and suite of associated tools built for processing data for Magic: the Gathering cards
+.Sh DESCRIPTION
+.Nm
+provides python classes for searching for and processing Magic cards as JSON objects. See
+.Ev JSON FORMATTING
+for more information on how card templating translates to JSON.
+.Nm
+is designed to interface with Scryfall data, so you may find a more complete reference by consulting the documentation for the Scryfall API at https://scryfall.com/docs/api
+.Pp
+.Nm
+is in no way affiliated with or endorsed by Scryfall, Magic: the Gathering or Wizards of the Coast.
+.Sh EXECUTABLES
+.Nm
+provides a few command line utilities for your convenience. See their respective man panges for more information.
+.Pp
+.Bl -tag -width indent
+.It mtlfc(1)
+Takes a query and searches for cards matching that query. By default, this returns only the name, mana cost, type line, oracle text, and flavour text, all in a human readable format. It can also be made to return raw JSON.
+.It mtlfp(1)
+Takes a list of card names and generates a scaled, printable HTML file for creating playtest cards.
+.It mtlfv(1)
+Generates a vim tags file from the available card data, allowing one to quickly see the details of a card from within vim.

@@ -1,0 +1,14 @@
+import mtlf
+import re
+
+cards = mtlf.Cards_dict()
+
+directory = "$HOME/.vim/tags"
+
+with open("cards.txt", "w") as cards_file:
+    with open("mtg.tags", "w") as tags_file:
+        for card in cards.cards:
+            cards_file.write(card['name'].replace('//', '--') + "\n")
+            cards_file.write(mtlf.print_card(card))
+            tags_file.write(card['name'].replace('//', '--') + "\t" + directory + "/cards.txt\t/^" + card['name'].replace('//', '--') + "/\n")
+

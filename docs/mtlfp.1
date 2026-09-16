@@ -1,0 +1,43 @@
+.Dd January 24, 2025
+.Dt MTLFP 1
+.Os
+.Sh NAME
+.Nm mtlfp
+.Nd create a printable HTML document of playtest Magic: the Gathering cards
+.Sh SYNOPSIS
+.Nm
+.Ar deck_list
+.Ar [measured_height]
+.Sh DESCRIPTION
+.Nm
+takes a list of Magic cards and outputs to stdout a printable HTML document of playtest cards. Theoretically, when printed on a sheet of A4 paper, the playtest cards should be 63mm wide by 88mm tall, the same dimensions as a genuine Magic card. However, margins and scaling issues may be introduced somewhere between my infallible programming and your real life printer.
+.Pp
+For this reason, if your cards are oversized or undersized, you can measure the height of the card in millimeters and input it as the measured_height parameter. Please take care before doing this to ensure that the sizing issue is a scaling issue, and not a cropping issue -- if your cards are cut off at the top or bottom, using the measured height will exacerbate the issue. Please also ensure you're correctly measuring from the very edge of the card if you have white or silver-bordered cards.
+.Pp
+For information on the format of the deck_list file, see
+.Ev FORMAT
+
+.Sh FORMAT
+At its simplest, each line in the deck_list file can be a card name.
+.Nm
+will simply find whichever image scryfall returns first for that card name. To select a specific printing, the set code and collector's number can also be specified after the name, with the card name, set code, and collector's number all being separated by a '|' bar character.
+.Pp
+.Bl -compact -tag width indent
+.It
+Card name|XXX|123
+.El
+.Pp
+Alternatively, you can specify a filename on disk to be used as the image by surrounding it in brackets. This is useful particularly if you have an edited image or custom art.
+.Pp
+.Bl -compact -tag width indent
+.It
+(/path/to/card_art.png)
+.El
+.Pp
+You can prepend either the card name or the filepath with an integer quantity, if you wish to print multiples of the card. Separate with a space.
+.Bl -compact -tag width indent
+.It
+4 Card name|XXX|123
+.It
+4 (/path/to/card_art.png)
+.El

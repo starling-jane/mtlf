@@ -1,0 +1,84 @@
+.Dd January 24, 2025
+.Dt MTLFC 1
+.Os
+.Sh NAME
+.Nm mtlfc
+.Nd get information on a Magic: the Gathering card
+.Sh SYNOPSIS
+.Nm
+.Op Fl -json
+.Op Fl -pretty-json
+.Op Fl -version
+.Op Fl -help
+.Op Fl -scryfall
+.Ar query
+.Sh DESCRIPTION
+.Nm
+searches for relevant Magic cards and outputs selected fields to stdout. By default, it will search for any cards where the 'name' field matches
+.Ar query
+and will print a human readable synopsis of the card as described in 
+.Ev FORMAT
+
+.Pp
+Options that
+.Nm
+understands:
+.Bl -tag -width indent
+.It Fl -json
+Print the end result as raw JSON instead of the default human readable synopsis
+.It Fl -pretty-json
+This pretty-prints the python dictionary object that the JSON data is internally converted to. This provides all of the data present in the raw JSON, but in a way that's more human readable and perhaps more easily parsed by grep and such. If you need actual JSON, use the --json flag instead.
+.It Fl -version
+Print the version string and exit
+.It Fl -help
+Print the help text and exit
+.It Fl -scryfall
+Does nothing. Planned to be implemented in the future, but you probably shouldn't use this anyway.
+
+.Sh FORMAT
+.Pp
+By default, the output of
+.Nm
+is formatted as a list of all matching cards, each card formatted as follows:
+.Pp
+.Bl -compact -tag -width indent
+.It
+(Card name) (Mana cost)
+.It
+(Typeline)
+.It
+(Oracle text)
+.It
+(Flavour text)
+.It
+(Power and toughness, if present)
+.It
+---
+.El
+.Pp
+The triple dash itself signifies the end of a card. Double-faced cards are printed front-face first, then back-face, separated by an empty line.
+.Pp
+.Bl -compact -tag -width indent
+.It
+(Card name) (Mana cost)
+.It
+(Typeline)
+.It
+(Oracle text)
+.It
+(Flavour text)
+.El
+.Pp
+.Bl -compact -tag -width indent
+.It
+(Reverse side card name)
+.It
+(Typeline)
+.It
+(Oracle text)
+.It
+(Flavour text)
+.It
+(Power and toughness)
+.It
+---
