@@ -114,17 +114,24 @@ copy_files_from_repo()
 		echo "installing $app ..."
 		echo "#!$python_bin" > "$bin_dir/$app"
 		cat "$app" >> "$bin_dir/$app"
+		chmod +x "$bin_dir/$app"
+		if [ "$?" == "0" ]
+		then
+			echo "$app installed."
+		fi
+	done
+	cd ../sh_apps
+	for app in *
+	do
+		echo "installing $app ..."
+		cp "$app" "$bin_dir/$app"
+		chmod +x "$bin_dir/$app"
 		if [ "$?" == "0" ]
 		then
 			echo "$app installed."
 		fi
 	done
 	cd ..
-	cp sh_apps/* "$bin_dir"
-	if [ "$?" == "0" ]
-	then
-		echo "shell scripts installed."
-	fi
 	#cp apps/* "$bin_dir"
 	#if [ "$?" == "0" ]
 	#then
