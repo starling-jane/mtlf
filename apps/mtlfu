@@ -96,7 +96,7 @@ install_from_repo()
 
 clone_from_git()
 {
-	tmp_folder = "$(mktemp -d)"
+	tmp_folder="$(mktemp -d)"
 	cd "$tmp_folder"
 	git clone "$git_src"
 	cd "mtlf"
@@ -104,7 +104,7 @@ clone_from_git()
 clean_temp_files()
 {
 	echo "cleaning up temp files..."
-	rmdir "$tmp_folder"
+	rm -r "$tmp_folder"
 	if [ "$?" == "0" ]
 	then
 		echo "done."
