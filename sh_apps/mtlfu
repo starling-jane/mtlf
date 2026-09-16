@@ -108,7 +108,7 @@ copy_files_from_repo()
 	then
 		echo "mtlf.py installed."
 	fi
-	cd py_apps
+	cd "py_apps"
 	for app in *
 	do
 		echo "installing $app ..."
@@ -141,6 +141,7 @@ copy_files_from_repo()
 clone_from_git()
 {
 	tmp_folder="$(mktemp -d)"
+	echo "tmp_folder: $tmp_folder"
 	cd "$tmp_folder"
 	git clone "$git_src"
 	cd "mtlf"
@@ -174,5 +175,7 @@ then
 	fi
 elif [ "$command" == "update" ]
 then
+	clone_from_git
 	update_from_repo
+	clean_temp_files
 fi
