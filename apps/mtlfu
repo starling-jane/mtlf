@@ -9,7 +9,7 @@ conf_found=0
 apps_folder_found=0
 mtlf_py_found=0
 
-git_src=''
+git_src='https://github.com/starling-jane/mtlf'
 
 command=$1
 
