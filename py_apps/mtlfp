@@ -12,7 +12,7 @@ if len(sys.argv) > 1:
 			flags.append(args.pop(i))
 
 if len(args) <= 1:
-    calibration_mm = 210
+    calibration_mm = 88
 else:
     calibration_mm = int(args[1])
 
