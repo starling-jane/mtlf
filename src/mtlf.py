@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import math
+import socket
 
 version_number = '0.1'
 version_string = 'mtlf v' + version_number
@@ -98,6 +99,70 @@ class Cards_dict:
 					unsorted.append(matches.pop(i))
 			sorted_matches = sorted(matches, key=lambda x: x[sort[0]], reverse=sort[1])
 			return sorted_matches + unsorted
+
+class Client_dict(Cards_dict):
+    def __init__(self, address, sock_type='AF_UNIX'):
+        self.address = address
+        self.sock_type = sock_type
+    def search_jsons(self, query_string):
+        if self.sock_type == 'AF_UNIX':
+            self.sock = socket.socket(socket.AF_UNIX)
+        elif self.sock_type == 'AF_INET':
+            self.sock = socket.socket(socket.AF_INET)
+
+        self.sock.connect(self.address)
+        self.sock.send(bytes(query_string, 'utf-8'))
+
+        return_bytes = b''
+        return_buf = b''
+        while True:
+            return_buf = self.sock.recv(1024)
+            return_bytes = return_bytes + return_buf
+            print(bytes.decode(return_buf, 'utf-8'))
+            if return_buf == b'':
+                break
+
+        return_str = bytes.decode(return_bytes, 'utf-8')
+        return_json = json.loads(return_str)
+        
+        self.sock.close()
+        return return_json
+
+class Server_dict(Cards_dict):
+    def __init__(self, address, sock_type='AF_UNIX', *args, **kwargs):
+        self.address = address
+        if sock_type == 'AF_UNIX':
+            self.sock = socket.socket(socket.AF_UNIX)
+        elif sock_type == 'AF_INET':
+            self.sock = socket.socket(socket.AF_INET)
+
+        super().__init__(*args, **kwargs)
+        print(self.cards)
+
+        self.sock.bind(self.address)
+        self.sock.listen()
+        while True:
+            conn, address = self.sock.accept()
+            self.handle_conn(conn)
+
+    def handle_conn(self, conn):
+        req_bytes = b''
+        req_buf = b''
+        while True:
+            req_buf = conn.recv(1024)
+            req_bytes = req_bytes + req_buf
+            if len(req_buf) < 1024:
+                break
+
+        req_str = bytes.decode(req_bytes, 'utf-8')[:-1]
+        print('request: \'' + req_str + '\'\n')
+        resp_json = self.search_jsons(req_str)
+        resp_str = json.dumps(resp_json)
+        print('response: ' + str(resp_json) + '\n')
+        resp_bytes = bytes(resp_str, 'utf-8')
+
+        conn.sendall(resp_bytes)
+        conn.close()
 
 def sortby(item, sort):
 	if sort in item.keys():
