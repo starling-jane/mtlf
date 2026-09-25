@@ -12,9 +12,9 @@ if len(sys.argv) > 1:
 			flags.append(args.pop(i))
 
 if len(args) <= 1:
-    calibration_mm = 88
+	calibration_mm = 88
 else:
-    calibration_mm = int(args[1])
+	calibration_mm = int(args[1])
 
 scale_factor = 88/calibration_mm
 img_width = scale_factor*63
@@ -26,18 +26,18 @@ print(f"""<html>
 <head>
 <style>
 body {{
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }}
 img {{
-    width: {img_width}mm;
-    height: {img_height}mm;
-    margin: 0mm;
+	width: {img_width}mm;
+	height: {img_height}mm;
+	margin: 0mm;
 }}
 .page {{
-    width: 210mm;
-    height: 297mm;
-    padding: 0mm 3mm 0mm 3mm;
+	width: 210mm;
+	height: 297mm;
+	padding: 0mm 3mm 0mm 3mm;
 }}
 </style>
 <body>
@@ -48,67 +48,67 @@ img {{
 r = re.compile('^([0-9]*) *([^|]*)\\|?([^|]*)\\|?(.*)$')
 s = re.compile('^([0-9]*) \\(([^)]*)\\)')
 with open(args[0], 'r') as file:
-    images_on_page = 0
-    for line in file:
-        file_name = None
-        m = s.match(line.replace('\n', ''))
-        if(m):
-            file_name = m.group(2)
-            quantity = m.group(1)
-            if quantity == '':
-                quantity = 1
-            else:
-                quantity = int(quantity)
-        else:
-            m = r.match(line.replace('\n', ''))
-            quantity = m.group(1)
-            name = m.group(2)
-            set_name = m.group(3)
-            collector_number = m.group(4)
-            if quantity == '':
-                quantity = 1
-            else:
-                quantity = int(quantity)
-            queries = []
-            queries.append('name=^' + name + '$')
-            query = 'name="' + name + '"'
-            if set_name != '':
-                queries.append('set=^' + set_name + '$')
-                query += ' set="^' + set_name + '$"'
-            if collector_number != '':
-                queries.append('collector_number=^' + collector_number + '$')
-                query += ' collector_number="^' + collector_number + '$"'
-            query = query.replace('\n', '')
-        #print(query)
-        for i in range(quantity):
-            #print(name)
-            if file_name == None:
+	images_on_page = 0
+	for line in file:
+		file_name = None
+		m = s.match(line.replace('\n', ''))
+		if(m):
+			file_name = m.group(2)
+			quantity = m.group(1)
+			if quantity == '':
+				quantity = 1
+			else:
+				quantity = int(quantity)
+		else:
+			m = r.match(line.replace('\n', ''))
+			quantity = m.group(1)
+			name = m.group(2)
+			set_name = m.group(3)
+			collector_number = m.group(4)
+			if quantity == '':
+				quantity = 1
+			else:
+				quantity = int(quantity)
+			queries = []
+			queries.append('name=^' + name + '$')
+			query = 'name="' + name + '"'
+			if set_name != '':
+				queries.append('set=^' + set_name + '$')
+				query += ' set="^' + set_name + '$"'
+			if collector_number != '':
+				queries.append('collector_number=^' + collector_number + '$')
+				query += ' collector_number="^' + collector_number + '$"'
+			query = query.replace('\n', '')
+		#print(query)
+		for i in range(quantity):
+			#print(name)
+			if file_name == None:
 		for card in cards.search_json(queries):
 			if card['layout'] != 'art_series':
-                		j = card
+						j = card
 				break
-                if j["layout"] in ["modal_dfc", "transform"]:
-                    for face in j["card_faces"]:
-                    #file_name = face["image_uris"]["large"]
-                        print("<img src='" + face["image_uris"]["large"] + "' />")
-                        images_on_page += 1
-                        if images_on_page >= 9:
-                            print("</div><div class='page'><br />")
-                            images_on_page = 0
-                else:
-                    print("<img src='" + j["image_uris"]["large"] + "' />")
-                    images_on_page += 1
-                    if images_on_page >= 9:
-                        print("</div><div class='page'><br />")
-                        images_on_page = 0
-            else:
-                print("<img src='" + file_name + "' />")
-                images_on_page += 1
-                if images_on_page >= 9:
-                    print("</div><div class='page'><br />")
-                    images_on_page = 0
-    if images_on_page > 0:
-        print("</div>")
+				if j["layout"] in ["modal_dfc", "transform"]:
+					for face in j["card_faces"]:
+					#file_name = face["image_uris"]["large"]
+						print("<img src='" + face["image_uris"]["large"] + "' />")
+						images_on_page += 1
+						if images_on_page >= 9:
+							print("</div><div class='page'><br />")
+							images_on_page = 0
+				else:
+					print("<img src='" + j["image_uris"]["large"] + "' />")
+					images_on_page += 1
+					if images_on_page >= 9:
+						print("</div><div class='page'><br />")
+						images_on_page = 0
+			else:
+				print("<img src='" + file_name + "' />")
+				images_on_page += 1
+				if images_on_page >= 9:
+					print("</div><div class='page'><br />")
+					images_on_page = 0
+	if images_on_page > 0:
+		print("</div>")
 print("""
 </body>
 </html>""")
