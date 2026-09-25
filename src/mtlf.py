@@ -75,11 +75,11 @@ class Cards_dict:
 	# key-value pairs, it takes a single string, in the form of
 	# "key1=val1 key2=val2 key3=val3 [...]"
 	def search_jsons(self, query_string, sort=None, cardattr=None):
-		#args = []
-		#r = re.compile('([^ =]*)="([^"]*)"|([^ =]*)=([^ ]*)')
-		#for m in re.finditer(r, query_string):
-		#	args.append(m.group(1) + '=' + m.group(2))
-		args = query_string.split(' ')
+		args = []
+		r = re.compile('([^ =]*)="([^"]*)"|([^ =]*)=([^ ]*)')
+		for m in re.finditer(r, query_string):
+		args.append(m.group(1) + '=' + m.group(2))
+		#args = query_string.split(' ')
 		return self.search_json(args, sort, cardattr)
 	# queries is a dict of key-value pairs
 	# the keys correspond to the names of the fields in a card's
