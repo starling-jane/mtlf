@@ -83,7 +83,11 @@ with open(args[0], 'r') as file:
 		for i in range(quantity):
 			#print(name)
 			if file_name == None:
-				j = cards.search_jsons(query)[0]
+				for card in cards.search_jsons(query):
+					if 'image_uris' in card.keys():
+						j = card
+						break
+				#j = cards.search_jsons(query)[0]
 				if j["layout"] in ["modal_dfc", "transform"]:
 					for face in j["card_faces"]:
 					#file_name = face["image_uris"]["large"]
