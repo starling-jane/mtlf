@@ -75,6 +75,10 @@ class Cards_dict:
 	# key-value pairs, it takes a single string, in the form of
 	# "key1=val1 key2=val2 key3=val3 [...]"
 	def search_jsons(self, query_string, sort=None, cardattr=None):
+        #args = []
+        #r = re.compile('([^ =]*)="([^"]*)"|([^ =]*)=([^ ]*)')
+        #for m in re.finditer(r, query_string):
+        #    args.append(m.group(1) + '=' + m.group(2))
 		args = query_string.split(' ')
 		return self.search_json(args, sort, cardattr)
 	# queries is a dict of key-value pairs
@@ -208,9 +212,12 @@ def pattern_map(query_arr):
 		return_arr.append(('name', query_arr[0]))
 	else:
 		for item in query_arr:
+            
 			pair = re.split('=', item)
 			if len(pair) == 2:
-				return_arr.append((pair[0], pair[1]))
+                key = pair[0]
+                val = re.compile('"?([^"]*)"?)').search(pair[1]).group(1)
+				return_arr.append((key, val))
 	return return_arr
 
 # scryfall represents double-faced cards and other cards with alternative
