@@ -153,9 +153,9 @@ def make_dict(*args, **kwargs):
 			address = (config.options['address'], int(config.options['port']))
 		elif config.options['sock_type'] == 'AF_UNIX':
 			address = config.options['address']
-		c = mtlf.Client_dict(address, sock_type)
+		c = Client_dict(address, sock_type)
 	else:
-		c = mtlf.Cards_dict(*args, **kwargs)
+		c = Cards_dict(*args, **kwargs)
 	return c
 
 class Server_dict(Cards_dict):
