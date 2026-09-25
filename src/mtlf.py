@@ -82,6 +82,7 @@ class Cards_dict:
 				args.append(m.group(3) + '=' + m.group(4))
 			else:
 				args.append(m.group(1) + '=' + m.group(2))
+        print(args)
 		#args = query_string.split(' ')
 		return self.search_json(args, sort, cardattr)
 	# queries is a dict of key-value pairs
