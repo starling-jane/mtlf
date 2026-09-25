@@ -99,8 +99,8 @@ class Cards_dict:
 			for query in pattern_map(queries):
 				if query[0] in card.keys():
 					result = str(card[query[0]])
-				if not re.search(query[1].lower(), result.lower().replace('\n', '').replace('\r', '')):
-					match = False
+					if not re.search(query[1].lower(), result.lower().replace('\n', '').replace('\r', '')):
+						match = False
 			if match:
 					matches.append(card)
 					#break
