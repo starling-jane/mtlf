@@ -170,19 +170,22 @@ class Server_dict(Cards_dict):
 	def __init__(self, address, sock_type='AF_UNIX', *args, **kwargs):
 		self.address = address
 		if sock_type == 'AF_UNIX':
-			self.sock = socket.socket(socket.AF_UNIX)
+			self.sock_type = socket.AF_UNIX
+			#self.sock = socket.socket(socket.AF_UNIX)
 		elif sock_type == 'AF_INET':
-			self.sock = socket.socket(socket.AF_INET)
+			self.sock_type = socket.AF_INET
+			#self.sock = socket.socket(socket.AF_INET)
 
 		super().__init__(*args, **kwargs)
 
-		self.sock.bind(self.address)
-		self.sock.listen()
+		#self.sock.bind(self.address)
+		#self.sock.listen()
 
 	def server_loop(self):
-		while True:
-			conn, address = self.sock.accept()
-			self.handle_conn(conn)
+		with socket.socket(self.sock_type) as sock:
+			while True:
+				conn, address = sock.accept()
+				self.handle_conn(conn)
 
 	def handle_conn(self, conn):
 		req_bytes = b''
