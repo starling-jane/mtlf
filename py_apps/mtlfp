@@ -70,13 +70,13 @@ with open(args[0], 'r') as file:
 			else:
 				quantity = int(quantity)
 			queries = []
-			queries.append('name=^' + name + '$')
+			queries.append('name="^' + name + '$"')
 			query = 'name="^' + name + '$"'
 			if set_name != '':
-				queries.append('set=^' + set_name + '$')
+				queries.append('set="^' + set_name + '$"')
 				query += ' set="^' + set_name + '$"'
 			if collector_number != '':
-				queries.append('collector_number=^' + collector_number + '$')
+				queries.append('collector_number="^' + collector_number + '$"')
 				query += ' collector_number="^' + collector_number + '$"'
 			query = query.replace('\n', '')
 		#print(query)
