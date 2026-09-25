@@ -29,9 +29,11 @@ class Cards_dict:
 	pp = pprint.PrettyPrinter(indent=4, width=40)
 	# find data.json to load it
 	def data_finder(self):
+		self.config = Config()
 		home = os.environ.get('HOME')
-		user_path = home + '/.mtlf/data.json'
-		if os.path.exists(user_path):
+		#user_path = home + '/.mtlf/data.json'
+		data_path = self.config.options['data_dir']
+		if os.path.exists(data_path):
 			time_since_modified = math.floor(time.time() - os.path.getmtime(user_path)/(60*60*24))
 			if time_since_modified > 30 and self.interactive:
 				print('data.json hasn\'t been updated in ' + time_since_modified + ' days!')
