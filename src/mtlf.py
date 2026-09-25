@@ -78,7 +78,7 @@ class Cards_dict:
 		args = []
 		r = re.compile('([^ =]*)="([^"]*)"|([^ =]*)=([^ ]*)')
 		for m in re.finditer(r, query_string):
-		args.append(m.group(1) + '=' + m.group(2))
+			args.append(m.group(1) + '=' + m.group(2))
 		#args = query_string.split(' ')
 		return self.search_json(args, sort, cardattr)
 	# queries is a dict of key-value pairs
