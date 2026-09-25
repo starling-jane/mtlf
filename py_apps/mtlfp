@@ -71,7 +71,7 @@ with open(args[0], 'r') as file:
 				quantity = int(quantity)
 			queries = []
 			queries.append('name=^' + name + '$')
-			query = 'name="' + name + '"'
+			query = 'name="^' + name + '$"'
 			if set_name != '':
 				queries.append('set=^' + set_name + '$')
 				query += ' set="^' + set_name + '$"'
@@ -83,10 +83,7 @@ with open(args[0], 'r') as file:
 		for i in range(quantity):
 			#print(name)
 			if file_name == None:
-				for card in cards.search_json(queries):
-					if 'image_uris' in card.keys():
-						j = card
-						break
+				j = cards.search_json(queries)[0]
 				if j["layout"] in ["modal_dfc", "transform"]:
 					for face in j["card_faces"]:
 					#file_name = face["image_uris"]["large"]
