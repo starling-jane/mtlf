@@ -1,12 +1,25 @@
 import mtlf
+import sys
+
+if len(sys.argv) > 1:
+	flags = []
+	args = sys.argv[1:]
+	for i in range(len(args) - 1, -1, -1):
+		if args[i][0] == '-':
+			flags.append(args.pop(i))
+
+if len(args) > 1:
+	data_location = int(args[1])
+else:
+	data_location = None
 
 config = mtlf.Config()
 if config.options['sock_type'] == 'AF_UNIX':
-    address = config.options['address']
+	address = config.options['address']
 elif config.options['sock_type'] == 'AF_INET':
-    address = (config.options['address'], int(config.options['port']))
+	address = (config.options['address'], int(config.options['port']))
 sock_type = config.options['sock_type']
 
-server = mtlf.Server_dict(address, sock_type)
+server = mtlf.Server_dict(address, sock_type, filename=data_location)
 
 server.server_loop()

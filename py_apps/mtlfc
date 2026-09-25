@@ -54,12 +54,20 @@ Flags:
 		else:
 			attr = None
 	c = mtlf.make_dict()
+	result = c.search_json(args)
+	if '--unique' in flags:
+		names = []
+		for card in result:
+			if card['name'] in names:
+				result.remove(card)
+			else:
+				names.append(card['name'])
 	if '--json' in flags:
-		print(json.dumps(c.search_json(args)))
+		print(json.dumps(result))
 	elif '--pretty-json' in flags:
-		c.pp.pprint(c.search_json(args))
+		c.pp.pprint(result)
 	else:
-		matches = c.search_json(args)
+		matches = result
 		for match in matches:
 			print(mtlf.format_card(match))
 			print('---\n')
