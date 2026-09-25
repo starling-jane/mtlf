@@ -209,7 +209,8 @@ def pattern_map(query_arr):
 	else:
 		for item in query_arr:
 			pair = re.split('=', item)
-			return_arr.append((pair[0], pair[1]))
+            if(len(pair) == 2):
+			    return_arr.append((pair[0], pair[1]))
 	return return_arr
 
 # scryfall represents double-faced cards and other cards with alternative
