@@ -84,7 +84,7 @@ with open(args[0], 'r') as file:
 			#print(name)
 			if file_name == None:
 				for card in cards.search_json(queries):
-					if card['layout'] != 'art_series':
+					if 'image_uris' in card.keys():
 						j = card
 						break
 					if j["layout"] in ["modal_dfc", "transform"]:
