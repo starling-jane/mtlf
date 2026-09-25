@@ -216,7 +216,7 @@ def pattern_map(query_arr):
 			pair = re.split('=', item)
 			if len(pair) == 2:
 				key = pair[0]
-				val = re.compile('"?([^"]*)"?)').search(pair[1]).group(1)
+				val = re.compile('"?([^"]*)"?').search(pair[1]).group(1)
 				return_arr.append((key, val))
 	return return_arr
 
