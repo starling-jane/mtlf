@@ -83,24 +83,24 @@ with open(args[0], 'r') as file:
 		for i in range(quantity):
 			#print(name)
 			if file_name == None:
-		for card in cards.search_json(queries):
-			if card['layout'] != 'art_series':
+				for card in cards.search_json(queries):
+					if card['layout'] != 'art_series':
 						j = card
-				break
-				if j["layout"] in ["modal_dfc", "transform"]:
-					for face in j["card_faces"]:
-					#file_name = face["image_uris"]["large"]
-						print("<img src='" + face["image_uris"]["large"] + "' />")
+						break
+					if j["layout"] in ["modal_dfc", "transform"]:
+						for face in j["card_faces"]:
+						#file_name = face["image_uris"]["large"]
+							print("<img src='" + face["image_uris"]["large"] + "' />")
+							images_on_page += 1
+							if images_on_page >= 9:
+								print("</div><div class='page'><br />")
+								images_on_page = 0
+					else:
+						print("<img src='" + j["image_uris"]["large"] + "' />")
 						images_on_page += 1
 						if images_on_page >= 9:
 							print("</div><div class='page'><br />")
 							images_on_page = 0
-				else:
-					print("<img src='" + j["image_uris"]["large"] + "' />")
-					images_on_page += 1
-					if images_on_page >= 9:
-						print("</div><div class='page'><br />")
-						images_on_page = 0
 			else:
 				print("<img src='" + file_name + "' />")
 				images_on_page += 1
