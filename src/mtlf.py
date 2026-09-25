@@ -34,12 +34,12 @@ class Cards_dict:
 		#user_path = home + '/.mtlf/data.json'
 		data_path = self.config.options['data_dir']
 		if os.path.exists(data_path):
-			time_since_modified = math.floor(time.time() - os.path.getmtime(user_path)/(60*60*24))
+			time_since_modified = math.floor(time.time() - os.path.getmtime(data_path)/(60*60*24))
 			if time_since_modified > 30 and self.interactive:
 				print('data.json hasn\'t been updated in ' + time_since_modified + ' days!')
 				if input('update data now? [Y/n]').lower() == 'y':
 					self.update_data()
-			return user_path
+			return data_path
 	# unimplemented
 	def update_data(self):
 		return False
