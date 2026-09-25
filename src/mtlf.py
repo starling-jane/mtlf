@@ -183,8 +183,8 @@ class Server_dict(Cards_dict):
 
 	def server_loop(self):
 		with socket.socket(self.sock_type) as sock:
-            sock.bind(self.address)
-            sock.listen()
+			sock.bind(self.address)
+			sock.listen()
 			while True:
 				conn, address = sock.accept()
 				self.handle_conn(conn)
