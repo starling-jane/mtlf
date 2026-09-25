@@ -11,19 +11,19 @@ version_number = '0.1'
 version_string = 'mtlf v' + version_number
 
 class Config:
-    r = re.compile("^([^=]*)=['\"](.*)['\"]$")
-    def __init__(self, filename='/usr/local/etc/mtlf.conf'):
-        self.filename = filename
-        self.options = {}
-        f = open(self.filename, 'r')
-        while True:
-            line = f.readline()
-            if line:
-                m = self.r.match(line)
-                if(m):
-                    self.options[m.group(1)] = m.group(2)
-            else:
-                break
+	r = re.compile("^([^=]*)=['\"](.*)['\"]$")
+	def __init__(self, filename='/usr/local/etc/mtlf.conf'):
+		self.filename = filename
+		self.options = {}
+		f = open(self.filename, 'r')
+		while True:
+			line = f.readline()
+			if line:
+				m = self.r.match(line)
+				if(m):
+					self.options[m.group(1)] = m.group(2)
+			else:
+				break
 
 class Cards_dict:
 	pp = pprint.PrettyPrinter(indent=4, width=40)
@@ -116,37 +116,37 @@ class Cards_dict:
 			return sorted_matches + unsorted
 
 class Client_dict(Cards_dict):
-    def __init__(self, address, sock_type='AF_UNIX'):
-        self.address = address
-        self.sock_type = sock_type
-    def search_json(self, queries):
-        query_string = ' '.join(queries)
-        return self.search_jsons(query_string)
-    def search_jsons(self, query_string):
-        if self.sock_type == 'AF_UNIX':
-            self.sock = socket.socket(socket.AF_UNIX)
-        elif self.sock_type == 'AF_INET':
-            self.sock = socket.socket(socket.AF_INET)
+	def __init__(self, address, sock_type='AF_UNIX'):
+		self.address = address
+		self.sock_type = sock_type
+	def search_json(self, queries):
+		query_string = ' '.join(queries)
+		return self.search_jsons(query_string)
+	def search_jsons(self, query_string):
+		if self.sock_type == 'AF_UNIX':
+			self.sock = socket.socket(socket.AF_UNIX)
+		elif self.sock_type == 'AF_INET':
+			self.sock = socket.socket(socket.AF_INET)
 
-        self.sock.connect(self.address)
-        self.sock.send(bytes(query_string, 'utf-8'))
+		self.sock.connect(self.address)
+		self.sock.send(bytes(query_string, 'utf-8'))
 
-        return_bytes = b''
-        return_buf = b''
-        while True:
-            return_buf = self.sock.recv(1024)
-            return_bytes = return_bytes + return_buf
-            if return_buf == b'':
-                break
+		return_bytes = b''
+		return_buf = b''
+		while True:
+			return_buf = self.sock.recv(1024)
+			return_bytes = return_bytes + return_buf
+			if return_buf == b'':
+				break
 
-        return_str = bytes.decode(return_bytes, 'utf-8')
-        return_json = json.loads(return_str)
-        
-        self.sock.close()
-        return return_json
+		return_str = bytes.decode(return_bytes, 'utf-8')
+		return_json = json.loads(return_str)
+		
+		self.sock.close()
+		return return_json
 
 def make_dict(*args, **kwargs):
-    config = Config()
+	config = Config()
 	if 'sock_type' in config.options:
 		sock_type = config.options['sock_type']
 		if config.options['sock_type'] == 'AF_INET':
@@ -156,44 +156,44 @@ def make_dict(*args, **kwargs):
 		c = mtlf.Client_dict(address, sock_type)
 	else:
 		c = mtlf.Cards_dict(*args, **kwargs)
-    return c
+	return c
 
 class Server_dict(Cards_dict):
-    def __init__(self, address, sock_type='AF_UNIX', *args, **kwargs):
-        self.address = address
-        if sock_type == 'AF_UNIX':
-            self.sock = socket.socket(socket.AF_UNIX)
-        elif sock_type == 'AF_INET':
-            self.sock = socket.socket(socket.AF_INET)
+	def __init__(self, address, sock_type='AF_UNIX', *args, **kwargs):
+		self.address = address
+		if sock_type == 'AF_UNIX':
+			self.sock = socket.socket(socket.AF_UNIX)
+		elif sock_type == 'AF_INET':
+			self.sock = socket.socket(socket.AF_INET)
 
-        super().__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 
-        self.sock.bind(self.address)
-        self.sock.listen()
+		self.sock.bind(self.address)
+		self.sock.listen()
 
-    def server_loop(self):
-        while True:
-            conn, address = self.sock.accept()
-            self.handle_conn(conn)
+	def server_loop(self):
+		while True:
+			conn, address = self.sock.accept()
+			self.handle_conn(conn)
 
-    def handle_conn(self, conn):
-        req_bytes = b''
-        req_buf = b''
-        while True:
-            req_buf = conn.recv(1024)
-            req_bytes = req_bytes + req_buf
-            if len(req_buf) < 1024:
-                break
+	def handle_conn(self, conn):
+		req_bytes = b''
+		req_buf = b''
+		while True:
+			req_buf = conn.recv(1024)
+			req_bytes = req_bytes + req_buf
+			if len(req_buf) < 1024:
+				break
 
-        req_str = bytes.decode(req_bytes, 'utf-8')[:-1]
-        print('request: \'' + req_str + '\'\n')
-        resp_json = self.search_jsons(req_str)
-        resp_str = json.dumps(resp_json)
-        print('response: ' + str(resp_json) + '\n')
-        resp_bytes = bytes(resp_str, 'utf-8')
+		req_str = bytes.decode(req_bytes, 'utf-8')[:-1]
+		print('request: \'' + req_str + '\'\n')
+		resp_json = self.search_jsons(req_str)
+		resp_str = json.dumps(resp_json)
+		print('response: ' + str(resp_json) + '\n')
+		resp_bytes = bytes(resp_str, 'utf-8')
 
-        conn.sendall(resp_bytes)
-        conn.close()
+		conn.sendall(resp_bytes)
+		conn.close()
 
 def sortby(item, sort):
 	if sort in item.keys():
