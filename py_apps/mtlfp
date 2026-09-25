@@ -77,8 +77,8 @@ with open(args[0], 'r') as file:
 				query += ' set="^' + set_name + '$"'
 			if collector_number != '':
 				queries.append('collector_number="^' + collector_number + '$"')
-				query += ' collector_number="^' + collector_number + '$"\n'
-			#query = query.replace('\n', '')
+				query += ' collector_number="^' + collector_number + '$"'
+			query = query.replace('\n', '')
 		#print(query)
 		for i in range(quantity):
 			#print(name)
