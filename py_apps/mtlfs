@@ -9,7 +9,7 @@ if len(sys.argv) > 1:
 			flags.append(args.pop(i))
 else:
 	args = []
-if len(args) > 1:
+if len(args) > 0:
 	data_location = int(args[1])
 else:
 	data_location = None
