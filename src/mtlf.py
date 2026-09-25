@@ -189,7 +189,7 @@ class Server_dict(Cards_dict):
 			if len(req_buf) < 1024:
 				break
 
-		req_str = bytes.decode(req_bytes, 'utf-8')[:-1]
+		req_str = bytes.decode(req_bytes, 'utf-8')#[:-1]
 		print('request: \'' + req_str + '\'\n')
 		resp_json = self.search_jsons(req_str)
 		resp_str = json.dumps(resp_json)
