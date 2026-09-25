@@ -222,7 +222,7 @@ def pattern_map(query_arr):
 				#key = pair[0]
 				#val = re.compile('"?([^"]*)"?').search(pair[1]).group(1)
 				#return_arr.append((key, val))
-				return_arr.append(pair[0], pair[1])
+				return_arr.append((pair[0], pair[1]))
 	return return_arr
 
 # scryfall represents double-faced cards and other cards with alternative
