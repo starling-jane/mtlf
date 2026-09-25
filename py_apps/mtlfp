@@ -84,13 +84,16 @@ with open(args[0], 'r') as file:
 			#print(name)
 			if file_name == None:
 				for card in cards.search_jsons(query):
-					if 'image_uris' in card.keys():
+					if card['layout'] != 'art_series':
 						j = card
 						break
-					elif 'card_faces' in card.keys():
-						if 'image_uris' in card['card_faces'].keys():
-							j = card
-							break
+					#if 'image_uris' in card.keys():
+					#	j = card
+					#	break
+					#elif 'card_faces' in card.keys():
+					#	if 'image_uris' in card['card_faces'].keys():
+					#		j = card
+					#		break
 				#j = cards.search_jsons(query)[0]
 				if j["layout"] in ["modal_dfc", "transform"]:
 					for face in j["card_faces"]:
