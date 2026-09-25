@@ -1,0 +1,12 @@
+import mtlf
+
+config = mtlf.Config()
+if config.options['sock_type'] == 'AF_UNIX':
+    address = config.options['address']
+elif config.options['sock_type'] == 'AF_INET':
+    address = (config.options['address'], int(config.options['port']))
+sock_type = config.options['sock_type']
+
+server = mtlf.Server_dict(address, sock_type)
+
+server.server_loop()

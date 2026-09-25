@@ -2,6 +2,8 @@ import mtlf
 import sys
 import json
 
+config = mtlf.Config()
+
 if len(sys.argv) > 1:
 	flags = []
 	args = sys.argv[1:]
@@ -51,8 +53,7 @@ Flags:
 			attr = args[2]
 		else:
 			attr = None
-
-	c = mtlf.Cards_dict()
+	c = mtlf.make_dict()
 	if '--json' in flags:
 		print(json.dumps(c.search_json(args)))
 	elif '--pretty-json' in flags:

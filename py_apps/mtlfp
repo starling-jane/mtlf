@@ -20,7 +20,7 @@ scale_factor = 88/calibration_mm
 img_width = scale_factor*63
 img_height = scale_factor*88
 
-cards = mtlf.Cards_dict(os.environ.get('HOME') + '/.mtlf/full-data.json')
+cards = mtlf.make_dict(os.environ.get('HOME') + '/.mtlf/full-data.json')
 
 print(f"""<html>
 <head>

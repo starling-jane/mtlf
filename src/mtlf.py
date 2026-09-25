@@ -10,6 +10,21 @@ import socket
 version_number = '0.1'
 version_string = 'mtlf v' + version_number
 
+class Config:
+    r = re.compile("^([^=]*)=['\"](.*)['\"]$")
+    def __init__(self, filename='/usr/local/etc/mtlf.conf'):
+        self.filename = filename
+        self.options = {}
+        f = open(self.filename, 'r')
+        while True:
+            line = f.readline()
+            if line:
+                m = self.r.match(line)
+                if(m):
+                    self.options[m.group(1)] = m.group(2)
+            else:
+                break
+
 class Cards_dict:
 	pp = pprint.PrettyPrinter(indent=4, width=40)
 	# find data.json to load it
@@ -104,6 +119,9 @@ class Client_dict(Cards_dict):
     def __init__(self, address, sock_type='AF_UNIX'):
         self.address = address
         self.sock_type = sock_type
+    def search_json(self, queries):
+        query_string = ' '.join(queries)
+        return self.search_jsons(query_string)
     def search_jsons(self, query_string):
         if self.sock_type == 'AF_UNIX':
             self.sock = socket.socket(socket.AF_UNIX)
@@ -118,7 +136,6 @@ class Client_dict(Cards_dict):
         while True:
             return_buf = self.sock.recv(1024)
             return_bytes = return_bytes + return_buf
-            print(bytes.decode(return_buf, 'utf-8'))
             if return_buf == b'':
                 break
 
@@ -127,6 +144,19 @@ class Client_dict(Cards_dict):
         
         self.sock.close()
         return return_json
+
+def make_dict(*args, **kwargs):
+    config = Config()
+	if 'sock_type' in config.options:
+		sock_type = config.options['sock_type']
+		if config.options['sock_type'] == 'AF_INET':
+			address = (config.options['address'], int(config.options['port']))
+		elif config.options['sock_type'] == 'AF_UNIX':
+			address = config.options['address']
+		c = mtlf.Client_dict(address, sock_type)
+	else:
+		c = mtlf.Cards_dict(*args, **kwargs)
+    return c
 
 class Server_dict(Cards_dict):
     def __init__(self, address, sock_type='AF_UNIX', *args, **kwargs):
@@ -137,10 +167,11 @@ class Server_dict(Cards_dict):
             self.sock = socket.socket(socket.AF_INET)
 
         super().__init__(*args, **kwargs)
-        print(self.cards)
 
         self.sock.bind(self.address)
         self.sock.listen()
+
+    def server_loop(self):
         while True:
             conn, address = self.sock.accept()
             self.handle_conn(conn)
